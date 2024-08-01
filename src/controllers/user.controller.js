@@ -199,18 +199,15 @@ const updateAccountDetails = asyncHandler( async (req, res) => {
     if(!fullName || !email) {
         throw new ApiError(400, "All fields are required");
     }
-    const user = await User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
         req?.user._id,
         {
             $set: {
                 fullName,
                 email,
             }
-        },
-        {
-            new: true
         }
-    ).select("-password");
+    )
 
     return res.status(200)
     .json( new ApiResponse(
@@ -221,7 +218,7 @@ const updateAccountDetails = asyncHandler( async (req, res) => {
 })
 
 const updateUserAvatar = asyncHandler( async (req, res) => {
-    const avatarLocalPath = req.files?.avatar?.path;
+    const avatarLocalPath = req.files?.avatar[0]?.path;
 
     if(!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is missing");
@@ -251,7 +248,7 @@ const updateUserAvatar = asyncHandler( async (req, res) => {
 })
 
 const updateUserCoverImage = asyncHandler( async (req, res) => {
-    const coverImageLocalPath = req.files?.coverImage?.path;
+    const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
     if(!coverImageLocalPath) {
         throw new ApiError(400, "Cover Image file is missing");
